@@ -1,0 +1,6 @@
+{
+  "name": "Child Phishing Awareness & Safety Application",
+  "description": "An interactive educational platform teaching children how to identify phishing links and online scams through safe simulated scenarios, real-time feedback, and progress tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
