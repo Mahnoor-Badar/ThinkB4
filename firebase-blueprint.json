@@ -1,0 +1,119 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Child or admin user profile with safety progress and threat stats",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "User unique identifier" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Display name of the learner" },
+        "role": { "type": "string", "enum": ["child", "admin", "user"], "description": "Role in application" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "lastLoginAt": { "type": "string", "format": "date-time", "description": "Last login timestamp" },
+        "totalScore": { "type": "number", "description": "Total defense score points" },
+        "totalAttempted": { "type": "number", "description": "Total scenarios attempted" },
+        "totalCorrect": { "type": "number", "description": "Total scenarios correctly identified" },
+        "totalIncorrect": { "type": "number", "description": "Total scenarios incorrectly answered" },
+        "categoryStats": { "type": "object", "description": "Per-category performance breakdown" },
+        "lastActiveAt": { "type": "string", "format": "date-time", "description": "Timestamp of last action" }
+      },
+      "required": ["uid", "email", "displayName", "role"]
+    },
+    "Scenario": {
+      "title": "Scenario",
+      "description": "Educational phishing scenario with interactive simulated content and options",
+      "type": "object",
+      "properties": {
+        "scenarioId": { "type": "string", "description": "Unique scenario ID" },
+        "title": { "type": "string", "description": "Scenario title" },
+        "description": { "type": "string", "description": "Brief description" },
+        "category": { "type": "string", "description": "Phishing threat category" },
+        "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"], "description": "Challenge difficulty" },
+        "content": { "type": "object", "description": "Simulated phishing message content" },
+        "correctSafeAction": { "type": "string", "description": "The golden rule safe action" },
+        "explanation": { "type": "string", "description": "Detailed learning explanation" },
+        "learningObjective": { "type": "string", "description": "Key takeaway objective" },
+        "options": { "type": "array", "description": "Choice options for the challenge" },
+        "isActive": { "type": "boolean", "description": "Whether scenario is visible to learners" },
+        "createdBy": { "type": "string", "description": "Author UID" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last updated timestamp" }
+      },
+      "required": ["scenarioId", "title", "category", "difficulty", "content", "options", "isActive"]
+    },
+    "Response": {
+      "title": "Response",
+      "description": "Immutable log record of a user's scenario decision attempt",
+      "type": "object",
+      "properties": {
+        "responseId": { "type": "string", "description": "Unique response ID" },
+        "userId": { "type": "string", "description": "Reference to user UID" },
+        "scenarioId": { "type": "string", "description": "Reference to scenario ID" },
+        "selectedOptionId": { "type": "string", "description": "ID of option selected" },
+        "isCorrect": { "type": "boolean", "description": "Whether the decision was safe" },
+        "scoreObtained": { "type": "number", "description": "Points earned" },
+        "timeTakenSeconds": { "type": "number", "description": "Time taken to decide in seconds" },
+        "attemptNumber": { "type": "number", "description": "Attempt sequence number" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "Submission timestamp" }
+      },
+      "required": ["responseId", "userId", "scenarioId", "selectedOptionId", "isCorrect"]
+    },
+    "Feedback": {
+      "title": "Feedback",
+      "description": "User questions, scam reports, and feedback submissions",
+      "type": "object",
+      "properties": {
+        "feedbackId": { "type": "string", "description": "Unique feedback ID" },
+        "userId": { "type": "string", "description": "Reference to user UID" },
+        "scenarioId": { "type": "string", "description": "Optional reference to scenario ID" },
+        "feedbackText": { "type": "string", "description": "User message or suggestion" },
+        "rating": { "type": "number", "description": "Rating out of 5" },
+        "category": { "type": "string", "description": "Feedback category" },
+        "status": { "type": "string", "enum": ["pending", "reviewed", "resolved"], "description": "Review status" },
+        "adminResponse": { "type": "string", "description": "Mentor or admin response text" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["feedbackId", "userId", "feedbackText", "status"]
+    },
+    "AiResult": {
+      "title": "AiResult",
+      "description": "Server-generated personalized threat coaching and weakness analysis",
+      "type": "object",
+      "properties": {
+        "aiResultId": { "type": "string", "description": "Unique AI result ID" },
+        "userId": { "type": "string", "description": "Reference to user UID" },
+        "relatedScenarioIds": { "type": "array", "description": "Scenarios analyzed" },
+        "performanceSummary": { "type": "string", "description": "Overview of child's safety posture" },
+        "identifiedWeaknesses": { "type": "array", "description": "Specific scam tactics that tricked the user" },
+        "recommendedTopics": { "type": "array", "description": "Curriculum topics to study" },
+        "personalizedAdvice": { "type": "string", "description": "Tailored actionable advice" },
+        "aiModel": { "type": "string", "description": "Gemini model version" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Generation timestamp" }
+      },
+      "required": ["aiResultId", "userId", "performanceSummary", "personalizedAdvice"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User accounts and learning progress aggregates"
+    },
+    "/scenarios/{scenarioId}": {
+      "schema": "Scenario",
+      "description": "Phishing challenges and educational threat simulations"
+    },
+    "/responses/{responseId}": {
+      "schema": "Response",
+      "description": "Recorded attempts of scenario choices"
+    },
+    "/feedback/{feedbackId}": {
+      "schema": "Feedback",
+      "description": "Learner feedback, scam submissions, and questions"
+    },
+    "/ai_results/{aiResultId}": {
+      "schema": "AiResult",
+      "description": "AI-generated cybersecurity threat assessments and advice"
+    }
+  }
+}

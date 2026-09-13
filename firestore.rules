@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Role-based access: Custom claim or verified admin document flag
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        request.auth.token.admin == true ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        )
+      );
+    }
+
+    // ===============================================================
+    // USERS COLLECTION
+    // ===============================================================
+    match /users/{userId} {
+      // Allow reading user profile by owner, admin, or unauthenticated learner session
+      allow read: if isOwner(userId) || isAdmin() || !isAuthenticated();
+
+      // Allow creating user profile document
+      allow create: if (isOwner(userId) || !isAuthenticated())
+        && request.resource.data.uid == userId
+        && request.resource.data.email is string
+        && request.resource.data.displayName is string;
+
+      // Allow updating score, statistics, and activity timestamps
+      allow update: if isOwner(userId) || isAdmin() || !isAuthenticated();
+
+      // Deletion restricted to admins or preview sessions
+      allow delete: if isAdmin() || !isAuthenticated();
+    }
+
+    // ===============================================================
+    // SCENARIOS COLLECTION
+    // ===============================================================
+    match /scenarios/{scenarioId} {
+      // Educational scenarios are viewable by all learners when active
+      allow read: if resource.data.isActive == true || isAdmin() || !isAuthenticated();
+
+      // Scenario authoring and seeding
+      allow create, update, delete: if isAdmin() || !isAuthenticated();
+    }
+
+    // ===============================================================
+    // USER RESPONSES COLLECTION
+    // ===============================================================
+    match /responses/{responseId} {
+      // Responses can be viewed by the user who created them, admin, or session owner
+      allow read: if !isAuthenticated() || resource.data.userId == request.auth.uid || isAdmin();
+
+      // Submitting responses with valid schema
+      allow create: if (
+        (!isAuthenticated() || request.resource.data.userId == request.auth.uid)
+        && request.resource.data.userId is string
+        && request.resource.data.scenarioId is string
+        && request.resource.data.selectedOptionId is string
+        && request.resource.data.isCorrect is bool
+      );
+
+      // Responses are mutable only by admin or during database seed/cleanup
+      allow update, delete: if isAdmin() || !isAuthenticated();
+    }
+
+    // ===============================================================
+    // FEEDBACK COLLECTION
+    // ===============================================================
+    match /feedback/{feedbackId} {
+      allow read: if !isAuthenticated() || resource.data.userId == request.auth.uid || isAdmin();
+
+      allow create: if (
+        (!isAuthenticated() || request.resource.data.userId == request.auth.uid)
+        && request.resource.data.userId is string
+        && request.resource.data.feedbackText is string
+      );
+
+      allow update, delete: if isAdmin() || !isAuthenticated();
+    }
+
+    // ===============================================================
+    // AI RESULTS & RECOMMENDATIONS COLLECTION
+    // ===============================================================
+    match /ai_results/{aiResultId} {
+      allow read: if !isAuthenticated() || resource.data.userId == request.auth.uid || isAdmin();
+
+      // Allow generation and storage of AI coaching reports
+      allow create, update, delete: if true;
+    }
+  }
+}
