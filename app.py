@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import streamlit as st
-
-st.set_page_config(
-    page_title="ThinkB4",
-    page_icon="🛡️"
-)
-
-st.title("ThinkB4")
-st.write("Cyber Safety Awareness Simulation")
-=======
 """
 Main entry point. Run with: streamlit run app.py
 
@@ -41,4 +30,3 @@ elif screen == "scenario":
     render_scenario()
 elif screen == "result":
     render_result()
->>>>>>> 188b119 (Update team member count in README)
