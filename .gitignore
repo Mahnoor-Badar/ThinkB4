@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules/
 build/
 dist/
@@ -6,3 +7,27 @@ coverage/
 *.log
 .env*
 !.env.example
+=======
+# Environment / secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+>>>>>>> 188b119 (Update team member count in README)

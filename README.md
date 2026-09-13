@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Child Phishing Awareness & Cyber Defender App
 
 An interactive, gamified cybersecurity awareness and phishing defense platform designed specifically for children, students, and young digital citizens. Built with React 19, Tailwind CSS, Cloud Firestore, and powered by Gemini AI for personalized threat coaching.
@@ -113,3 +114,53 @@ git branch -M main
 git remote add origin https://github.com/<YOUR_USERNAME>/<YOUR_REPOSITORY_NAME>.git
 git push -u origin main
 ```
+=======
+ThinkB4
+
+ThinkB4 is a simulation and game-based mobile/web application designed to teach children aged 7–16 how to recognize and respond to risky online situations.
+Through interactive scenarios and AI-powered analysis, children learn to identify phishing-style scams, fake rewards, prize offers, and suspicious verification requests.
+Work Distribution
+The project responsibilities will be divided among five team members:
+Mahnoor Badar
+         Project leader:AI/ML roles,Deployment 
+       (GitHub code merging),App architecture
+Javaria Murtaza
+     Frontend Role
+Muhammad Rohail
+     Backend Role
+Muhammad Junaid Murtaza 
+     QA and testing 
+Umama Rashid 
+     Documentation 
+Tech Stack
+Frontend: Interface and interactive scenario screens
+AI Component: AI-based analysis of children's decisions and risk explanations
+Backend/Storage: Backend services for scenario data, user progress, decisions, and feedback
+Version Control: Git and GitHub for source-code management and team collaboration
+Features Overview
+Scenario Engine
+Presents interactive online-safety scenarios based on realistic situations.
+Includes examples such as fake game rewards, prize offers, phishing links, and verification requests.
+Decision Capture
+Allows children to select how they would respond to each scenario.
+Records the selected decision for analysis.
+AI Risk Analysis
+Analyzes the child's decision using an AI component.
+Explains whether the selected action is safe or risky in simple, child-friendly language.
+Risk/Consequence Display
+Shows the possible risks and consequences associated with an unsafe decision.
+Helps children understand why a particular action could be dangerous.
+Better Choice Guidance
+Provides the recommended safe response for the given situation.
+Teaches children practical online-safety habits they can apply in real life.
+Feedback and Rewards
+Provides immediate feedback after each decision.
+Uses game-based elements and rewards to encourage learning and engagement.
+Progress Tracking
+Tracks the child's performance across scenarios.
+Helps users monitor their learning progress and improve their online-safety awareness.
+Learning Flow
+Open App → Scenario → Child Decision → AI Analysis → Risk/Consequence → Better Choice → Feedback
+---
+ThinkB4 — Learn to pause, think, and make safer choices online.
+>>>>>>> 188b119 (Update team member count in README)
